@@ -81,10 +81,10 @@ RSpec.describe(UserFriendlyAdsQuery) do
       expect(expected_ads).to(match_array([ad]))
     end
 
-    it 'filters by user contacts if match hand2' do
+    it 'filters by user contacts if match hand2 and hand3' do
       user.user_contacts.find_by(phone_number: friend.phone_number).update(name: 'John')
       expected_ads = described_class.new.call(user: user, filters: { query: 'John' })
-      expect(expected_ads).to(match_array([ad_hand1, ad_hand2]))
+      expect(expected_ads).to(match_array([ad_hand1, ad_hand2, ad_hand3]))
     end
 
     it 'filters by contacts_mode' do

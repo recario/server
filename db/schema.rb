@@ -217,8 +217,7 @@ ActiveRecord::Schema.define(version: 2021_02_06_130842) do
     t.bigint("user_id", null: false)
     t.bigint("phone_number_id", null: false)
     t.string("name", limit: 100, null: false)
-    t.index(["name"], name: "index_user_contacts_on_name", using: :gist)
-    t.index(["phone_number_id", "name", "user_id"], name: "user_contacts_phone_number_id_name_user_id_idx")
+    t.index(["name"], name: "index_user_contacts_on_name", opclass: :gist_trgm_ops, using: :gist)
     t.index(["phone_number_id", "user_id"], name: "index_user_contacts_on_phone_number_id_and_user_id", unique: true)
     t.index(["user_id"], name: "index_user_contacts_on_user_id")
   end
@@ -249,7 +248,6 @@ ActiveRecord::Schema.define(version: 2021_02_06_130842) do
     t.datetime("created_at", precision: 6, null: false)
     t.datetime("updated_at", precision: 6, null: false)
     t.json("avatar")
-    t.index(["phone_number_id", "name"], name: "users_phone_number_id_name_idx")
     t.index(["phone_number_id"], name: "index_users_on_phone_number_id", unique: true)
   end
 
@@ -262,7 +260,8 @@ ActiveRecord::Schema.define(version: 2021_02_06_130842) do
   end
 
   create_table "versions", force: :cascade do |t|
-    t.string("item_type", null: false)
+    t.string("item_type")
+    t.string("{:null=>false}")
     t.bigint("item_id", null: false)
     t.string("event", null: false)
     t.string("whodunnit")

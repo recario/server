@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class UserFriendlyAdsQuery
-  MAX_HANDS_COUNT = 5
   LIMIT = 20
 
   def call(user:, offset: 0, limit: LIMIT, filters: {})
@@ -10,7 +9,7 @@ class UserFriendlyAdsQuery
     known_numbers = if filters[:contacts_mode] == 'directFriends'
       "SELECT phone_number_id FROM user_contacts WHERE user_id = #{user.id}"
     elsif user_contacts_matched_phone_numbers.present?
-      KnownNumbersFiltered.new.call(user.id, max_hands_count: MAX_HANDS_COUNT, filtered_friends_phone_number_ids: user_contacts_matched_phone_numbers)
+      KnownNumbersFiltered.new.call(user_phone_number_id: user.phone_number_id, friend_phone_number_ids: user_contacts_matched_phone_numbers)
     else
       KnownNumbers.new.call(user.id)
     end
