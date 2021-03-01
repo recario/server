@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 class EffectiveAds
   def call(filters:, should_search_query:)
-    ads = Ad.where(deleted: false).where('updated_at > ?', 3.months.ago)
-    ads = ads.joins('JOIN user_contacts ON user_contacts.phone_number_id = ads.phone_number_id')
+    ads = Ad.from('effective_ads AS ads')
     ads = ads.select('DISTINCT ON (ads.id) ads.id, ads.phone_number_id, ads.created_at')
     ads = ads.where('price >= ?', filters[:min_price]) if filters[:min_price].present?
     ads = ads.where('price <= ?', filters[:max_price]) if filters[:max_price].present?
